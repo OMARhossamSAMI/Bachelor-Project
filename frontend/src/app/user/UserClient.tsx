@@ -1074,7 +1074,7 @@ export default function UserClient() {
                           } else if (mission.title === "Build Your Dish") {
                             goTo("/level3");
                           } else if (mission.title === "Post-Test") {
-                            goTo("/post-test");
+                            goTo("/Post-Test");
                           } else {
                             const formattedTitle = mission.title
                               .replace(/\s+/g, "-")
@@ -1352,7 +1352,7 @@ export default function UserClient() {
                                       email || ""
                                     )}`;
                                   } else if (mission.title === "Post-Test") {
-                                    window.location.href = `/post-test?email=${encodeURIComponent(
+                                    window.location.href = `/Post-Test?email=${encodeURIComponent(
                                       email || ""
                                     )}`;
                                   } else {
