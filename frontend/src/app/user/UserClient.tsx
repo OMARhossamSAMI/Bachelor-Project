@@ -1074,7 +1074,7 @@ export default function UserClient() {
                           } else if (mission.title === "Build Your Dish") {
                             goTo("/level3");
                           } else if (mission.title === "Post-Test") {
-                            goTo("/Post-Test");
+                            goTo("/post-test");
                           } else {
                             const formattedTitle = mission.title
                               .replace(/\s+/g, "-")
@@ -1274,7 +1274,7 @@ export default function UserClient() {
                                     className="machine-start-btn"
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      goTo("/Post-Test");
+                                      goTo("/post-test");
                                     }}
                                   >
                                     Start Post-Test 🎓
@@ -1352,7 +1352,7 @@ export default function UserClient() {
                                       email || ""
                                     )}`;
                                   } else if (mission.title === "Post-Test") {
-                                    window.location.href = `/Post-Test?email=${encodeURIComponent(
+                                    window.location.href = `/post-test?email=${encodeURIComponent(
                                       email || ""
                                     )}`;
                                   } else {
