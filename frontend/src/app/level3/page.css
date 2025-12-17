@@ -1,0 +1,955 @@
+.level3-container {
+  width: 100%;
+  height: 100vh; /* exact viewport height */
+  padding-top: 90px;
+  padding-bottom: 200px; /* a bit more space below the plate */
+  background: var(--background-color, #050816);
+  color: var(--default-color, #f5f5ff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-y: auto;
+}
+
+.level3-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.level3-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.level3-subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* =======================
+   QUESTION + METER ROW
+   ======================= */
+
+.level3-top-row {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  align-items: center; /* center vertically */
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 58px; /* more space above the plate */
+}
+
+.level3-question {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+}
+
+.level3-question p {
+  margin: 0;
+}
+
+.level3-question .dish-name {
+  font-weight: 700;
+  color: #ffbb44;
+  margin-left: 6px;
+}
+
+/* =======================
+   PERFORMANCE METER
+   ======================= */
+
+.score-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+}
+
+.score-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.score-circle svg {
+  width: 120px;
+  height: 120px;
+  transform: rotate(-90deg);
+}
+
+.score-circle .bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 10;
+}
+
+.score-circle .progress {
+  fill: none;
+  stroke: #ff9f43;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 0;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.45s ease, stroke 0.3s ease;
+}
+
+.score-text {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 100%;
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+}
+
+.score-label {
+  margin-top: 4px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* =======================
+   PLACE SETTING
+   ======================= */
+
+.place-setting {
+  display: flex;
+  flex-direction: column; /* stack items vertically */
+  align-items: center; /* center plate + button */
+  width: 100%;
+  margin-top: 10px;
+  gap: 16px; /* spacing between plate and button */
+}
+
+/* Wrapper */
+.placemat-wrapper {
+  display: inline-block;
+}
+
+/* Colorful mat under the plate */
+.placemat {
+  position: relative;
+  padding: 18px 40px;
+  border-radius: 24px;
+  background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.02)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #ff9f43,
+      #ff9f43 10px,
+      #ff6b6b 10px,
+      #ff6b6b 20px,
+      #ff793f 20px,
+      #ff793f 30px
+    );
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 30px rgba(255, 145, 0, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Small tassels on left/right edges of the mat */
+.placemat::before,
+.placemat::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  width: 10px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.9) 4px,
+    transparent 4px,
+    transparent 10px
+  );
+}
+.placemat::before {
+  left: 8px;
+}
+.placemat::after {
+  right: 8px;
+}
+
+/* =======================
+   PLATE + WRAPPER
+   ======================= */
+
+.plate-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =======================
+   REALISTIC PLATE
+   ======================= */
+
+.plate-area {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* soft oval shadow under plate */
+.plate-shadow {
+  position: absolute;
+  bottom: 18px;
+  width: 70%;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.75),
+    transparent 70%
+  );
+  filter: blur(7px);
+  opacity: 0.95;
+}
+
+/* outer plate body */
+.plate-base {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 18%, #ffffff, #d9e0ec 55%, #9aa5ba);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25),
+    0 18px 35px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* rim ring */
+.plate-base::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.7),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.12);
+  background: radial-gradient(circle at 30% 18%, #fefefe, #e5ebf7 65%, #c2ccdd);
+}
+
+/* glossy highlight on upper-left */
+.plate-base::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 38px;
+  width: 90px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.8),
+    transparent 70%
+  );
+  opacity: 0.8;
+}
+
+/* inner “well” of the plate where food will sit */
+.plate-inner {
+  position: relative;
+  width: 64%;
+  height: 64%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 20%, #fdfdfd, #e9effa 55%, #c5cee0);
+  box-shadow: inset 0 12px 20px rgba(255, 255, 255, 0.85),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.16);
+}
+
+/* glow for later */
+.plate-base.highlight {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.45),
+    0 0 70px rgba(255, 200, 120, 0.55);
+  transform: translateY(-2px);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Plate states */
+.plate-base.plate-hover {
+  box-shadow: 0 0 26px rgba(224, 84, 24, 0.9), 0 0 70px rgba(144, 74, 33, 0.7);
+}
+.plate-base.plate-correct {
+  box-shadow: 0 0 26px rgba(46, 213, 115, 0.95),
+    0 0 70px rgba(39, 174, 96, 0.85);
+}
+.plate-base.plate-wrong {
+  box-shadow: 0 0 26px rgba(255, 94, 98, 0.95), 0 0 70px rgba(192, 57, 43, 0.85);
+}
+
+/* =======================
+   BUBBLE CARDS AROUND WHOLE MAT
+   ======================= */
+
+.card-ring {
+  position: absolute;
+  inset: -55px;
+  pointer-events: none; /* re-enabled on the cards */
+}
+
+/* token card */
+.food-card {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(150, 91, 40, 0.9),
+    rgba(13, 79, 234, 0.6) 60%,
+    rgba(53, 47, 47, 0.6) 100%
+  );
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px; /* 👈 spacing between emoji & label */
+
+  padding: 6px; /* 👈 breathing room */
+
+  box-shadow: 0 0 14px rgba(255, 180, 80, 0.25),
+    inset 0 4px 6px rgba(255, 255, 255, 0.08),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.45);
+
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+
+  text-align: center;
+}
+
+/* hover pop */
+.food-card:hover {
+  scale: 1.06;
+}
+
+.food-emoji {
+  font-size: 32px;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.35));
+  pointer-events: none;
+}
+
+.food-label {
+  font-size: clamp(9px, 2.2vw, 11px);
+  line-height: 1.15;
+  max-width: 72px;
+
+  text-align: center;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.92);
+
+  pointer-events: none;
+}
+
+.food-card.dragging {
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.45),
+    0 0 26px rgba(255, 200, 120, 0.75);
+}
+
+/* ===== Positions around the placemat (no overlap) ===== */
+
+.card-ring .food-card:nth-child(1) {
+  top: -42px;
+  left: 50%;
+  margin-left: -42px;
+}
+
+.card-ring .food-card:nth-child(2) {
+  top: 24%;
+  right: -72px;
+  margin-top: -42px;
+}
+
+.card-ring .food-card:nth-child(3) {
+  bottom: 24%;
+  right: -72px;
+  margin-bottom: -42px;
+}
+
+.card-ring .food-card:nth-child(4) {
+  bottom: -42px;
+  left: 50%;
+  margin-left: -42px;
+}
+
+.card-ring .food-card:nth-child(5) {
+  bottom: 24%;
+  left: -72px;
+  margin-bottom: -42px;
+}
+
+.card-ring .food-card:nth-child(6) {
+  top: 24%;
+  left: -72px;
+  margin-top: -42px;
+}
+
+/* =======================
+   CUTLERY
+   ======================= */
+
+.cutlery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fork */
+.fork {
+  height: 190px;
+  justify-content: center;
+  gap: 8px;
+}
+
+.fork-head {
+  position: relative;
+  width: 30px;
+  height: 34px;
+  border-radius: 18px 18px 10px 10px;
+  background: linear-gradient(180deg, #fdfefe, #cfd7e8);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    0 2px 5px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.fork-tine {
+  position: absolute;
+  bottom: 4px;
+  width: 3px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #fefefe, #c7cfdf);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.fork-tine:nth-child(1) {
+  left: 4px;
+}
+.fork-tine:nth-child(2) {
+  left: 9px;
+}
+.fork-tine:nth-child(3) {
+  left: 14px;
+}
+.fork-tine:nth-child(4) {
+  left: 19px;
+}
+
+.fork-handle {
+  width: 14px;
+  height: 110px;
+  border-radius: 10px 10px 18px 18px;
+  background: linear-gradient(180deg, #f9fbff, #cbd4e6);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.9),
+    0 4px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* Knife */
+.knife {
+  height: 190px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.knife-blade {
+  position: relative;
+  width: 16px;
+  height: 110px;
+  border-radius: 8px 8px 2px 2px;
+  background: linear-gradient(180deg, #fdfefe, #cfd7e8);
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.9),
+    0 4px 7px rgba(0, 0, 0, 0.45);
+}
+
+.knife-blade::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50% 50% 2px 2px;
+  background: linear-gradient(180deg, #fefefe, #d4dced);
+}
+
+.knife-handle {
+  width: 18px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #555555, #202020);
+  box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.4),
+    0 3px 6px rgba(0, 0, 0, 0.55);
+}
+
+/* =======================
+   CARD STATES
+   ======================= */
+
+.food-card.over-plate {
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(244, 157, 36, 0.98),
+    rgba(183, 106, 5, 0.9) 60%,
+    rgba(75, 42, 4, 0.95) 100%
+  );
+}
+
+.food-card.correct {
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(46, 213, 115, 0.95),
+    rgba(39, 174, 96, 0.9) 60%,
+    rgba(0, 98, 65, 0.95) 100%
+  );
+}
+
+.food-card.wrong {
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(255, 94, 98, 0.95),
+    rgba(192, 57, 43, 0.9) 60%,
+    rgba(120, 20, 20, 0.95) 100%
+  );
+}
+
+.food-card.removed {
+  opacity: 0;
+  scale: 0.75;
+  pointer-events: none;
+  transition: opacity 0.25s ease, scale 0.25s ease;
+}
+
+/* =======================
+   EMOJIS ON THE PLATE
+   ======================= */
+
+.plate-foods {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.plate-food-emoji {
+  font-size: 28px;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.35));
+}
+
+.plate-next-button {
+  margin-top: 85px;
+  padding: 10px 32px;
+  border-radius: 999px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 159, 67, 0.65);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.plate-next-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.45), 0 0 24px rgba(255, 159, 67, 0.85);
+}
+
+.plate-next-button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* =======================
+   GAME INTRO + COUNTDOWN
+   (same style as Level 2)
+   ======================= */
+
+.welcome-screen,
+.countdown-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--background-color, #050816);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: white;
+}
+
+.welcome-screen h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.welcome-screen p {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+.countdown-screen h1 {
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--accent-color, #ff9f43);
+  animation: pop 0.8s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========================= */
+/* GAME OVER MODAL           */
+/* (reused design from L2)   */
+/* ========================= */
+
+.game-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.game-modal {
+  width: min(420px, 90vw);
+  background: radial-gradient(
+      circle at 0% 0%,
+      rgba(255, 180, 80, 0.18),
+      transparent 55%
+    ),
+    var(--surface-color, #111321);
+  border-radius: 22px;
+  padding: 24px 24px 20px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.game-modal-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 6px;
+}
+
+.game-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.game-modal-score-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.game-modal-score-pill span:last-child {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.game-modal-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 18px;
+}
+
+.game-modal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #ffb14b, #ff7b2c);
+  color: #111321;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(255, 123, 0, 0.45);
+}
+
+.game-modal-button:hover {
+  transform: translateY(-1px);
+}
+
+/* End modal buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+@media (max-width: 768px) {
+  /* =======================
+     GENERAL LAYOUT
+     ======================= */
+
+  .level3-container {
+    padding-top: 60px;
+    padding-bottom: 20px;
+  }
+
+  .level3-title {
+    font-size: 24px;
+  }
+
+  .level3-subtitle {
+    font-size: 12px;
+  }
+
+  .level3-top-row {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 92vw;
+  }
+
+  .score-meter {
+    align-self: center;
+  }
+
+  .place-setting {
+    margin-top: 10px;
+  }
+
+  .placemat {
+    padding: 10px 14px;
+    border-radius: 16px;
+    gap: 18px;
+    max-width: 92vw;
+  }
+
+  /* =======================
+     PLATE (SCALED DOWN)
+     ======================= */
+
+  .plate-wrapper {
+    width: 180px;
+    height: 180px;
+  }
+
+  .plate-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .plate-base {
+    width: 140px;
+    height: 140px;
+  }
+
+  .plate-base::before {
+    inset: 12px;
+  }
+
+  .plate-inner {
+    width: 62%;
+    height: 62%;
+  }
+
+  /* =======================
+     CARD RING
+     ======================= */
+
+  .card-ring {
+    inset: -35px;
+  }
+
+  .food-card {
+    width: 60px;
+    height: 60px;
+    padding: 4px;
+  }
+
+  .food-emoji {
+    font-size: 24px;
+  }
+
+  .food-label {
+    font-size: 8.5px;
+    max-width: 52px;
+  }
+
+  /* =======================
+     CARD POSITIONS (FIXED)
+     ======================= */
+
+  .card-ring .food-card:nth-child(1) {
+    top: -34px;
+    left: 50%;
+    margin-left: -30px;
+  }
+
+  .card-ring .food-card:nth-child(2) {
+    top: 25%;
+    right: -54px;
+    margin-top: -30px;
+  }
+
+  .card-ring .food-card:nth-child(3) {
+    bottom: 25%;
+    right: -54px;
+    margin-bottom: -30px;
+  }
+
+  .card-ring .food-card:nth-child(4) {
+    bottom: -34px;
+    left: 50%;
+    margin-left: -30px;
+  }
+
+  .card-ring .food-card:nth-child(5) {
+    bottom: 25%;
+    left: -54px;
+    margin-bottom: -30px;
+  }
+
+  .card-ring .food-card:nth-child(6) {
+    top: 25%;
+    left: -54px;
+    margin-top: -30px;
+  }
+
+  /* =======================
+     MOBILE INTERACTION FIX
+     ======================= */
+
+  /* Disable hover scaling on touch devices */
+  .food-card:hover {
+    scale: 1;
+  }
+
+  /* Faster, snappier return on mobile */
+  .food-card.returning {
+    transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.32s cubic-bezier(0.22, 1, 0.36, 1), scale 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  /* =======================
+     MISC
+     ======================= */
+
+  .cutlery {
+    display: none;
+  }
+
+  .plate-food-emoji {
+    font-size: 22px;
+  }
+
+  /* Intro screens */
+  .welcome-screen {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .welcome-screen h2 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .welcome-screen p {
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 280px;
+    margin: 10px auto 20px auto;
+  }
+
+  .welcome-screen .game-modal-button {
+    width: 160px;
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}
+
+.food-card {
+  will-change: transform, scale;
+}
+/* ======================= */
+/* PRO SPRING RETURN FX    */
+/* ======================= */
+
+.food-card.returning {
+  transition: left 0.42s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+    top 0.42s cubic-bezier(0.18, 0.89, 0.32, 1.28), scale 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.food-card.returning {
+  scale: 1.02;
+  box-shadow: 0 0 22px rgba(255, 220, 160, 0.45),
+    0 0 40px rgba(255, 170, 80, 0.25);
+}

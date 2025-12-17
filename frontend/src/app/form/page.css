@@ -1,0 +1,264 @@
+.form-wrap {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(
+      80% 60% at 50% 10%,
+      rgba(255, 123, 0, 0.15),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0b1220 0%, #0e1630 100%);
+  overflow: visible !important; /* ✅ allow dropdowns to expand outside */
+}
+
+.form-card {
+  width: min(900px, 100%);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  position: relative; /* ✅ create stacking context */
+  overflow: visible !important; /* ✅ ensure dropdown lists are visible */
+  z-index: 1;
+}
+
+.form-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.form-subtitle {
+  color: #c9c9c9;
+  margin: 0 0 18px;
+}
+
+.form-alert {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 10px 0 16px;
+  font-size: 0.95rem;
+}
+.form-alert.error {
+  background: rgba(255, 78, 78, 0.15);
+  border: 1px solid rgba(255, 78, 78, 0.5);
+}
+.form-alert.success {
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.5);
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 820px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #ffb347;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  outline: none;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.08s ease;
+}
+.pill:hover {
+  transform: translateY(-1px);
+}
+.pill.active {
+  background: #ff7b00;
+  border-color: #ff9c33;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn.primary {
+  background: #ff7b00;
+  color: #fff;
+}
+.btn.primary:hover {
+  background: #ff9c33;
+}
+.btn.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* Input shown when "Other" is selected */
+.input-other {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  outline: none;
+}
+
+/* Modern select dropdown */
+select {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #fff;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: 0.3s ease;
+}
+select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+select:focus {
+  border-color: #ff9c33;
+}
+
+/* Section title enhancements */
+.form-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.form-subtitle {
+  color: #bcbcbc;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+/* Grid spacing and shadow polish */
+.form-card {
+  width: min(920px, 100%);
+  background: rgba(15, 20, 35, 0.85);
+  border-radius: 16px;
+  padding: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+select {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #fff;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+select:focus {
+  border-color: #ff9c33;
+  outline: none;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ✅ Fix dropdown list clipping */
+select option {
+  background: #10182e;
+  color: #fff;
+  border: none;
+}
+
+/* ✅ Make dropdown appear above blur layer */
+select:focus {
+  z-index: 9999 !important;
+  position: relative;
+}
+/* --- Multi-select label note --- */
+.label-note {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #bcbcbc;
+  margin-left: 6px;
+}
+
+/* --- Pill style enhancements --- */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: all 0.15s ease;
+}
+
+.pill:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.04);
+}
+
+.pill.active {
+  background: #ff7b00;
+  border-color: #ff9c33;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 123, 0, 0.3);
+}
