@@ -18,7 +18,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const API_URL =
+    process.env.NEXT_PUBLIC_API_URL ??
+    (() => {
+      throw new Error("NEXT_PUBLIC_API_URL is not defined");
+    })();
 
   const router = useRouter();
   // First useEffect: Preloader

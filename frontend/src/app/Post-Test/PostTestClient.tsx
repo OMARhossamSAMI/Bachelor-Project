@@ -5,7 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 import "./page.css";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (() => {
+    throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  })();
 const FrontEndURL =
   process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3001";
 
