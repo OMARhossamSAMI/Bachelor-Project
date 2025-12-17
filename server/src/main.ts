@@ -5,17 +5,20 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // ✅ Enable CORS so frontend (port 3001) can access backend (port 3000)
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: [
+      'http://localhost:3001', // local dev
+      'https://bachelor-project-frontend.vercel.app', // Vercel frontend
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
 
-  // ✅ Enable global validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  await app.listen(3000);
-  console.log('🚀 Backend running on Port 3000');
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`🚀 Backend running on port ${port}`);
 }
+
 bootstrap();
