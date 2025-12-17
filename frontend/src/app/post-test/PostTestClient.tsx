@@ -646,7 +646,7 @@ export default function PostTestClient() {
                       {formatDifficulty(current.difficulty)} question
                     </span>
                   )}
-                  {current.sources && current.sources.length > 0 && (
+                  {/* {current.sources && current.sources.length > 0 && (
                     <div className="meta-sources">
                       {current.sources.map((url: string) => (
                         <a
@@ -660,7 +660,7 @@ export default function PostTestClient() {
                         </a>
                       ))}
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 <div className="options-grid">
@@ -717,7 +717,7 @@ export default function PostTestClient() {
                     </span>
                   )}
 
-                  {current.sources && current.sources.length > 0 && (
+                  {/* {current.sources && current.sources.length > 0 && (
                     <div className="meta-sources">
                       {current.sources.map((url: string) => (
                         <a
@@ -731,7 +731,7 @@ export default function PostTestClient() {
                         </a>
                       ))}
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
 

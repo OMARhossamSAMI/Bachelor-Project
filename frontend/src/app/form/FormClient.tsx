@@ -26,6 +26,7 @@ export default function FormClient() {
   const router = useRouter();
   const params = useSearchParams();
   const email = params.get("email") || "";
+  const [otherText, setOtherText] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState<SetupFormData>({
     age: "",
@@ -51,6 +52,43 @@ export default function FormClient() {
     }, 150);
     return () => clearTimeout(timer);
   }, []);
+  const isFormValid = () => {
+    // basic required fields
+    if (
+      form.age === "" ||
+      !form.gender ||
+      !form.nationality ||
+      !form.germanLevel ||
+      !form.previousExperience ||
+      form.interests.length === 0 ||
+      !form.goal.trim() ||
+      !form.favoriteCuisine.trim() ||
+      !form.regionPreference
+    ) {
+      return false;
+    }
+
+    // "Other" validations
+    if (form.nationality === "Other" && !otherText.nationality?.trim()) {
+      return false;
+    }
+
+    if (
+      form.previousExperience === "Other" &&
+      !otherText.previousExperience?.trim()
+    ) {
+      return false;
+    }
+
+    if (
+      form.regionPreference === "Other" &&
+      !otherText.regionPreference?.trim()
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   const toggleInterest = (val: string) => {
     setForm((f) => {
@@ -77,8 +115,28 @@ export default function FormClient() {
 
       const payload = {
         email,
-        ...form,
+
         age: form.age === "" ? null : Number(form.age),
+        gender: form.gender,
+        germanLevel: form.germanLevel,
+        interests: form.interests,
+        goal: form.goal,
+        favoriteCuisine: form.favoriteCuisine,
+
+        nationality:
+          form.nationality === "Other"
+            ? otherText.nationality
+            : form.nationality,
+
+        previousExperience:
+          form.previousExperience === "Other"
+            ? otherText.previousExperience
+            : form.previousExperience,
+
+        regionPreference:
+          form.regionPreference === "Other"
+            ? otherText.regionPreference
+            : form.regionPreference,
       };
 
       const res = await fetch(`${API_URL}/userinfo`, {
@@ -196,8 +254,12 @@ export default function FormClient() {
               <input
                 type="text"
                 placeholder="Please specify"
+                value={otherText.nationality || ""}
                 onChange={(e) =>
-                  setForm({ ...form, nationality: e.target.value })
+                  setOtherText((prev) => ({
+                    ...prev,
+                    nationality: e.target.value,
+                  }))
                 }
                 className="input-other"
               />
@@ -249,8 +311,12 @@ export default function FormClient() {
               <input
                 type="text"
                 placeholder="Please specify"
+                value={otherText.previousExperience || ""}
                 onChange={(e) =>
-                  setForm({ ...form, previousExperience: e.target.value })
+                  setOtherText((prev) => ({
+                    ...prev,
+                    previousExperience: e.target.value,
+                  }))
                 }
                 className="input-other"
               />
@@ -329,8 +395,12 @@ export default function FormClient() {
               <input
                 type="text"
                 placeholder="Please specify"
+                value={otherText.regionPreference || ""}
                 onChange={(e) =>
-                  setForm({ ...form, regionPreference: e.target.value })
+                  setOtherText((prev) => ({
+                    ...prev,
+                    regionPreference: e.target.value,
+                  }))
                 }
                 className="input-other"
               />
@@ -347,7 +417,10 @@ export default function FormClient() {
             >
               Back
             </button>
-            <button className="btn primary" disabled={loading || !email}>
+            <button
+              className="btn primary"
+              disabled={loading || !email || !isFormValid()}
+            >
               {loading ? "Saving..." : "Save & Continue"}
             </button>
           </div>
