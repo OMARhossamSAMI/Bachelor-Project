@@ -30,7 +30,7 @@ export default function RootLayout({
         {/* Meta + Favicons */}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="assets/img/DeutschFlag_Curvy.png" rel="icon" />
+        <link href="frontend/assets/img/Deutschflag_Curvy.png" rel="icon" />
         <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
 
         {/* Google Fonts */}
