@@ -5,7 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 import "./page.css";
 
-const API_URL = "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const FrontEndURL =
+  process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3001";
 
 interface User {
   firstName: string;
@@ -915,9 +917,7 @@ export default function PreTestClient() {
               onClick={() => {
                 if (email) {
                   router.push(
-                    `http://localhost:3001/user?email=${encodeURIComponent(
-                      email
-                    )}`
+                    `${FrontEndURL}/user?email=${encodeURIComponent(email)}`
                   );
                 }
               }}

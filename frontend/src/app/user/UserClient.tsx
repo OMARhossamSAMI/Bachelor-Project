@@ -44,8 +44,7 @@ interface UserGame {
 
 import "./page.css";
 
-const API_URL = "http://localhost:3000";
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 export default function UserClient() {
   const params = useSearchParams();
   const email = params.get("email");

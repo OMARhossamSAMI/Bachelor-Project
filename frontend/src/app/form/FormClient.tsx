@@ -16,8 +16,7 @@ type SetupFormData = {
   regionPreference: string;
 };
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.trim() || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export default function FormClient() {
   const router = useRouter();
