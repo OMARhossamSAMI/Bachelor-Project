@@ -22,7 +22,16 @@ export class UserInfoService {
     const existing = await this.userInfoModel.findOne({ email: dto.email });
     if (existing) throw new BadRequestException('User info already exists.');
 
-    const createdInfo = new this.userInfoModel(dto);
+    const normalizedDto = {
+      ...dto,
+      regionPreference: dto.regionPreference
+        ? Array.isArray(dto.regionPreference)
+          ? dto.regionPreference
+          : [dto.regionPreference]
+        : [],
+    };
+
+    const createdInfo = new this.userInfoModel(normalizedDto);
     const savedInfo = await createdInfo.save();
 
     try {

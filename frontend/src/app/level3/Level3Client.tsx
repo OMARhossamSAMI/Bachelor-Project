@@ -131,7 +131,7 @@ export default function Level3Client() {
     if (typeof window === "undefined") return;
 
     countdownSoundRef.current = new Audio("/assets/audio/countdown.mp3");
-    bgMusicRef.current = new Audio("/assets/audio/bg-music.mp3");
+    bgMusicRef.current = new Audio("/assets/audio/level3.mp3");
     tickRef.current = new Audio("/assets/audio/tick.wav");
     dragSoundRef.current = new Audio("/assets/audio/drag.mp3");
     hoverSoundRef.current = new Audio("/assets/audio/bucket-hover.mp3");

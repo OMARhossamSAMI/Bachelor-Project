@@ -31,8 +31,8 @@ export class UserInfo extends Document {
   @Prop()
   favoriteCuisine?: string;
 
-  @Prop()
-  regionPreference?: string;
+  @Prop({ type: [String] })
+  regionPreference?: string[];
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);

@@ -18,6 +18,28 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginProgress, setLoginProgress] = useState(0);
+  const startLoginProgress = () => {
+    setLoginProgress(10);
+
+    const interval = setInterval(() => {
+      setLoginProgress((p) => {
+        if (p >= 90) return p;
+        return p + Math.random() * 10;
+      });
+    }, 250);
+
+    return interval;
+  };
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const waitAtLeast = (startTime: number, minMs: number) => {
+    const elapsed = Date.now() - startTime;
+    return elapsed < minMs
+      ? new Promise((res) => setTimeout(res, minMs - elapsed))
+      : Promise.resolve();
+  };
+
   const API_URL =
     process.env.NEXT_PUBLIC_API_URL ??
     (() => {
@@ -65,10 +87,11 @@ export default function Home() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setRegisterLoading(true);
 
-    // Password match validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
+      setRegisterLoading(false);
       return;
     }
 
@@ -91,6 +114,7 @@ export default function Home() {
       }
 
       setSuccess("🎉 Account created successfully!");
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -99,7 +123,6 @@ export default function Home() {
         confirmPassword: "",
       });
 
-      // ✅ After 3 seconds, open Sign In modal automatically
       setTimeout(() => {
         setShowRegister(false);
         setShowLogin(true);
@@ -107,6 +130,8 @@ export default function Home() {
       }, 2000);
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setRegisterLoading(false);
     }
   };
 
@@ -122,13 +147,21 @@ export default function Home() {
         "input[type='email']"
       ) as HTMLInputElement
     )?.value;
+
     const password = (
       (e.target as HTMLFormElement).querySelector(
         "input[type='password']"
       ) as HTMLInputElement
     )?.value;
 
+    let progressInterval: any;
+    const startTime = Date.now(); // ⏱️ track time
+
     try {
+      setLoginLoading(true);
+      setLoginProgress(0);
+      progressInterval = startLoginProgress();
+
       const res = await fetch(`${API_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -141,16 +174,25 @@ export default function Home() {
         throw new Error(data.message || "Invalid email or password.");
       }
 
-      // ✅ Success message
-      setSuccess("✅ Login successful! Redirecting...");
-      setError(null);
+      // ✅ ensure bar is visible for at least 1.2s
+      await waitAtLeast(startTime, 1200);
 
-      // Redirect to /user?email=...
+      clearInterval(progressInterval);
+      setLoginProgress(100);
+
+      setSuccess("✅ Login successful! Redirecting...");
+
       setTimeout(() => {
         router.push(`/user?email=${encodeURIComponent(email || "")}`);
-      }, 2000);
+      }, 600);
     } catch (err: any) {
+      clearInterval(progressInterval);
+      setLoginProgress(100);
       setError(err.message || "An unexpected error occurred.");
+
+      setTimeout(() => setLoginProgress(0), 800);
+    } finally {
+      setTimeout(() => setLoginLoading(false), 800);
     }
   };
 
@@ -248,6 +290,15 @@ export default function Home() {
         {showRegister && (
           <div className="popup-overlay" onClick={() => setShowRegister(false)}>
             <div className="popup-card" onClick={(e) => e.stopPropagation()}>
+              {loginLoading && (
+                <div className="login-progress-wrapper">
+                  <div
+                    className="login-progress-bar"
+                    style={{ width: `${loginProgress}%` }}
+                  />
+                </div>
+              )}
+
               <h3>Create Your Account</h3>
               <form className="popup-form" onSubmit={handleRegister}>
                 <input
@@ -302,8 +353,18 @@ export default function Home() {
                 {error && <p className="error-text">{error}</p>}
                 {success && <p className="success-text">{success}</p>}
 
-                <button type="submit" className="btn-get-started w-100 mt-2">
-                  Register
+                <button
+                  type="submit"
+                  className="btn-get-started w-100 mt-2"
+                  disabled={registerLoading}
+                >
+                  {registerLoading ? (
+                    <span className="btn-loading">
+                      <span className="spinner" /> Registering...
+                    </span>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
               </form>
               <p className="mt-2 small">
@@ -366,6 +427,15 @@ export default function Home() {
         {showLogin && (
           <div className="popup-overlay" onClick={() => setShowLogin(false)}>
             <div className="popup-card" onClick={(e) => e.stopPropagation()}>
+              {loginLoading && (
+                <div className="login-progress-wrapper">
+                  <div
+                    className="login-progress-bar"
+                    style={{ width: `${loginProgress}%` }}
+                  />
+                </div>
+              )}
+
               <h3>Welcome Back</h3>
               <form className="popup-form" onSubmit={handleLogin}>
                 <input type="email" placeholder="Email" required />
@@ -374,8 +444,18 @@ export default function Home() {
                 {error && <p className="error-text">{error}</p>}
                 {success && <p className="success-text">{success}</p>}
 
-                <button type="submit" className="btn-get-started w-100 mt-2">
-                  Sign In
+                <button
+                  type="submit"
+                  className="btn-get-started w-100 mt-2"
+                  disabled={loginLoading}
+                >
+                  {loginLoading ? (
+                    <span className="btn-loading">
+                      <span className="spinner" /> Signing in...
+                    </span>
+                  ) : (
+                    "Sign In"
+                  )}
                 </button>
               </form>
               <p className="mt-2 small">

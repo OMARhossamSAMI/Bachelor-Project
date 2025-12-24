@@ -45,6 +45,7 @@ export class CreateUserInfoDto {
   favoriteCuisine?: string;
 
   @IsOptional()
-  @IsString()
-  regionPreference?: string;
+  @IsArray()
+  @IsString({ each: true })
+  regionPreference?: string[];
 }

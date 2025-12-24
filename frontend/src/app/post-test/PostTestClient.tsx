@@ -67,6 +67,12 @@ export default function PostTestClient() {
   // touch-drag state for mobile
   const [touchSource, setTouchSource] = useState<string | null>(null);
   const [activeSource, setActiveSource] = useState<string | null>(null);
+  // mobile drag visual (ghost)
+  const [dragGhost, setDragGhost] = useState<{
+    src: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   // === Audio ===
   const countdownAudio = useRef<HTMLAudioElement | null>(null);
@@ -513,16 +519,37 @@ export default function PostTestClient() {
   };
 
   // ===== TOUCH DRAG HELPERS (mobile) =====
-  const handleTouchStart = (e: any, id: string) => {
+  const handleTouchStart = (e: any, id: string, image: string) => {
     if (showAnswer) return;
+
+    const touch = e.touches[0];
+
     setTouchSource(id);
     setActiveSource(id);
+
+    setDragGhost({
+      src: image,
+      x: touch.clientX,
+      y: touch.clientY,
+    });
   };
 
   const handleTouchMove = (e: any) => {
-    if (!touchSource) return;
-    // avoid scrolling while dragging
-    e.preventDefault();
+    if (!touchSource || !dragGhost) return;
+
+    e.preventDefault(); // prevent page scroll
+
+    const touch = e.touches[0];
+
+    setDragGhost((g) =>
+      g
+        ? {
+            ...g,
+            x: touch.clientX,
+            y: touch.clientY,
+          }
+        : null
+    );
   };
 
   const handleTouchEnd = (e: any) => {
@@ -555,6 +582,7 @@ export default function PostTestClient() {
 
     setTouchSource(null);
     setActiveSource(null);
+    setDragGhost(null);
   };
 
   return (
@@ -805,7 +833,9 @@ export default function PostTestClient() {
                         draggable={!showAnswer}
                         onDragStart={() => !showAnswer && setDragging(pair.id)}
                         // touch drag (mobile)
-                        onTouchStart={(e) => handleTouchStart(e, pair.id)}
+                        onTouchStart={(e) =>
+                          handleTouchStart(e, pair.id, pair.image)
+                        }
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                       >
@@ -906,6 +936,18 @@ export default function PostTestClient() {
               Back to my dashboard
             </button>
           </div>
+        </div>
+      )}
+      {/* === MOBILE DRAG GHOST (POST-TEST) === */}
+      {dragGhost && (
+        <div
+          className="drag-ghost"
+          style={{
+            left: dragGhost.x,
+            top: dragGhost.y,
+          }}
+        >
+          <img src={dragGhost.src} alt="" />
         </div>
       )}
     </div>

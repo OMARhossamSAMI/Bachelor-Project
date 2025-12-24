@@ -54,6 +54,7 @@ export default function UserClient() {
   const email = params.get("email");
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeFaq, setActiveFaq] = useState<number | null>(0); // first open
 
   // === NEW STATES ===
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -480,7 +481,7 @@ export default function UserClient() {
                         marginBottom: "15px",
                       }}
                     >
-                      Welcome back,{" "}
+                      Welcome Home,{" "}
                       <span
                         style={{
                           color: "#ff7b00",
@@ -1298,76 +1299,55 @@ export default function UserClient() {
                           )}
 
                           {/* Show Finished badge */}
+                          {/* Completed Action Bar */}
                           {userGame && (userGame as any)[mission.key] > 0 && (
-                            <span
-                              style={{
-                                display: "inline-block",
-                                marginTop: "6px",
-                                background: "#28a745",
-                                color: "#fff",
-                                padding: "4px 10px",
-                                borderRadius: "12px",
-                                fontSize: "0.85rem",
-                                fontWeight: 600,
-                              }}
-                            >
-                              ✅ Finished
-                            </span>
-                          )}
+                            <div className="mission-complete-bar">
+                              <div className="mission-complete-badge">
+                                <span className="dot" />
+                                Completed
+                              </div>
 
-                          {/* Replay button for finished levels */}
-                          {userGame && (userGame as any)[mission.key] > 0 && (
-                            <button
-                              style={{
-                                marginTop: "8px",
-                                padding: "6px 14px",
-                                borderRadius: "999px",
-                                border: "1px solid #ff7b00",
-                                background: "transparent",
-                                color: "#ffb347",
-                                fontSize: "0.85rem",
-                                fontWeight: 600,
-                                cursor: "pointer",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
+                              <button
+                                className="mission-replay-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  playMissionStartSound();
 
-                                playMissionStartSound();
-
-                                setTimeout(() => {
-                                  if (mission.title === "Warm-Up Level") {
-                                    window.location.href = `/level1?email=${encodeURIComponent(
-                                      email || ""
-                                    )}`;
-                                  } else if (
-                                    mission.title === "Regional Quest"
-                                  ) {
-                                    window.location.href = `/level2?email=${encodeURIComponent(
-                                      email || ""
-                                    )}`;
-                                  } else if (
-                                    mission.title === "Build Your Dish"
-                                  ) {
-                                    window.location.href = `/level3?email=${encodeURIComponent(
-                                      email || ""
-                                    )}`;
-                                  } else if (mission.title === "Post-Test") {
-                                    window.location.href = `/post-test?email=${encodeURIComponent(
-                                      email || ""
-                                    )}`;
-                                  } else {
-                                    const formattedTitle = mission.title
-                                      .replace(/\s+/g, "-")
-                                      .replace(/[^a-zA-Z0-9-]/g, "");
-                                    window.location.href = `/${formattedTitle}?email=${encodeURIComponent(
-                                      email || ""
-                                    )}`;
-                                  }
-                                }, 500);
-                              }}
-                            >
-                              🔁 Replay level
-                            </button>
+                                  setTimeout(() => {
+                                    if (mission.title === "Warm-Up Level") {
+                                      window.location.href = `/level1?email=${encodeURIComponent(
+                                        email || ""
+                                      )}`;
+                                    } else if (
+                                      mission.title === "Regional Quest"
+                                    ) {
+                                      window.location.href = `/level2?email=${encodeURIComponent(
+                                        email || ""
+                                      )}`;
+                                    } else if (
+                                      mission.title === "Build Your Dish"
+                                    ) {
+                                      window.location.href = `/level3?email=${encodeURIComponent(
+                                        email || ""
+                                      )}`;
+                                    } else if (mission.title === "Post-Test") {
+                                      window.location.href = `/post-test?email=${encodeURIComponent(
+                                        email || ""
+                                      )}`;
+                                    } else {
+                                      const formattedTitle = mission.title
+                                        .replace(/\s+/g, "-")
+                                        .replace(/[^a-zA-Z0-9-]/g, "");
+                                      window.location.href = `/${formattedTitle}?email=${encodeURIComponent(
+                                        email || ""
+                                      )}`;
+                                    }
+                                  }, 500);
+                                }}
+                              >
+                                🔁 Replay
+                              </button>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -1406,62 +1386,59 @@ export default function UserClient() {
                   data-aos="fade-up"
                   data-aos-delay={200}
                 >
-                  <div className="faq-item faq-active">
-                    <i className="faq-icon bi bi-question-circle" />
-                    <h3>What is this platform and what can I do here?</h3>
-                    <div className="faq-content">
-                      <p>
-                        This platform is designed to help users explore, learn,
-                        and connect through personalized interactive
-                        experiences. Whether you’re here to learn, showcase your
-                        skills, or engage with smart AI-driven tools, everything
-                        is tailored to your interests and goals.
-                      </p>
-                    </div>
-                    <i className="faq-toggle bi bi-chevron-right" />
-                  </div>
-                  {/* End Faq item*/}
-                  <div className="faq-item">
-                    <i className="faq-icon bi bi-question-circle" />
-                    <h3>How do I create an account and get started?</h3>
-                    <div className="faq-content">
-                      <p>
-                        Simply click on the “Sign Up” or “Get Started” button on
-                        the homepage, fill in your basic details. Once you’re
-                        in, you can instantly begin exploring your personalized
-                        journey and all available features.
-                      </p>
-                    </div>
-                    <i className="faq-toggle bi bi-chevron-right" />
-                  </div>
-                  {/* End Faq item*/}
-                  <div className="faq-item">
-                    <i className="faq-icon bi bi-question-circle" />
-                    <h3>Is the platform free to use?</h3>
-                    <div className="faq-content">
-                      <p>
-                        Yes! You can access most features completely free. The
-                        core experience is available for everyone at no cost.
-                      </p>
-                    </div>
-                    <i className="faq-toggle bi bi-chevron-right" />
-                  </div>
-                  {/* End Faq item*/}
-                  <div className="faq-item">
-                    <i className="faq-icon bi bi-question-circle" />
-                    <h3>How is my data protected and kept private?</h3>
-                    <div className="faq-content">
-                      <p>
-                        Your privacy is our priority. We use industry-standard
-                        encryption, secure servers, and never share your
-                        personal data with third parties. You can manage or
-                        delete your data anytime from your profile settings.
-                      </p>
-                    </div>
-                    <i className="faq-toggle bi bi-chevron-right" />
-                  </div>
+                  {[
+                    {
+                      q: "What is FoodCulture and why was it created?",
+                      a: "FoodCulture is an interactive learning platform that helps users explore German food culture through gamified missions and quizzes. It was created as part of a bachelor thesis project to study how gamification and AI-based personalization can improve cultural learning experiences.",
+                    },
+                    {
+                      q: "Who developed this project?",
+                      a: "FoodCulture was designed and developed by Omar Hossam, a Computer Science student specializing in Data Science and Software Engineering. The project combines academic research with real-world web and AI technologies.",
+                    },
+                    {
+                      q: "How does personalization work in FoodCulture?",
+                      a: "Personalization is based on the information you provide during the setup process, such as your preferences, interests, and learning goals. The platform uses this data to generate customized quizzes and missions, making each learning journey unique.",
+                    },
+                    {
+                      q: "What kind of missions and activities can I play?",
+                      a: "The platform includes a pre-test, multiple interactive learning levels, regional food challenges, and a final post-test. Each mission builds on the previous one to help you gradually improve your understanding of German food culture.",
+                    },
+                    {
+                      q: "What technologies were used to build the platform?",
+                      a: "FoodCulture was built using modern technologies including Next.js for the frontend, NestJS for the backend, MongoDB for data storage, and AI tools to generate personalized learning content dynamically.",
+                    },
+                    {
+                      q: "Is my data safe and is the platform free to use?",
+                      a: "Yes. The platform is completely free and all user data is handled securely. Personal information is used only to personalize the learning experience and support academic research purposes.",
+                    },
+                  ].map((item, index) => {
+                    const isActive = activeFaq === index;
 
-                  {/* End Faq item*/}
+                    return (
+                      <div
+                        className={`faq-item ${isActive ? "faq-active" : ""}`}
+                      >
+                        <div
+                          className="faq-header"
+                          onClick={() => setActiveFaq(isActive ? null : index)}
+                        >
+                          <i className="faq-icon bi bi-question-circle" />
+                          <h3>{item.q}</h3>
+                          <i
+                            className={`faq-toggle bi ${
+                              isActive ? "bi-chevron-down" : "bi-chevron-right"
+                            }`}
+                          />
+                        </div>
+
+                        <div
+                          className={`faq-content ${isActive ? "open" : ""}`}
+                        >
+                          <p>{item.a}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="col-lg-5 order-1 order-lg-2">

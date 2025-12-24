@@ -13,7 +13,7 @@ type SetupFormData = {
   interests: string[];
   goal: string;
   favoriteCuisine: string;
-  regionPreference: string;
+  regionPreference: string[];
 };
 
 const API_URL =
@@ -27,6 +27,19 @@ export default function FormClient() {
   const params = useSearchParams();
   const email = params.get("email") || "";
   const [otherText, setOtherText] = useState<Record<string, string>>({});
+  const [progress, setProgress] = useState(0);
+  const startProgress = () => {
+    setProgress(5);
+
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 90) return p;
+        return p + Math.random() * 8;
+      });
+    }, 300);
+
+    return interval;
+  };
 
   const [form, setForm] = useState<SetupFormData>({
     age: "",
@@ -37,7 +50,7 @@ export default function FormClient() {
     interests: [],
     goal: "",
     favoriteCuisine: "",
-    regionPreference: "",
+    regionPreference: [], // ✅ array now
   });
 
   const [loading, setLoading] = useState(false);
@@ -63,7 +76,7 @@ export default function FormClient() {
       form.interests.length === 0 ||
       !form.goal.trim() ||
       !form.favoriteCuisine.trim() ||
-      !form.regionPreference
+      form.regionPreference.length === 0
     ) {
       return false;
     }
@@ -81,7 +94,7 @@ export default function FormClient() {
     }
 
     if (
-      form.regionPreference === "Other" &&
+      form.regionPreference.includes("Other") &&
       !otherText.regionPreference?.trim()
     ) {
       return false;
@@ -101,6 +114,17 @@ export default function FormClient() {
       };
     });
   };
+  const toggleRegion = (region: string) => {
+    setForm((f) => {
+      const has = f.regionPreference.includes(region);
+      return {
+        ...f,
+        regionPreference: has
+          ? f.regionPreference.filter((r) => r !== region)
+          : [...f.regionPreference, region],
+      };
+    });
+  };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -109,13 +133,17 @@ export default function FormClient() {
       return;
     }
 
+    let progressInterval: any;
+
     try {
       setLoading(true);
       setError(null);
+      setProgress(0);
+
+      progressInterval = startProgress();
 
       const payload = {
         email,
-
         age: form.age === "" ? null : Number(form.age),
         gender: form.gender,
         germanLevel: form.germanLevel,
@@ -133,10 +161,14 @@ export default function FormClient() {
             ? otherText.previousExperience
             : form.previousExperience,
 
-        regionPreference:
-          form.regionPreference === "Other"
-            ? otherText.regionPreference
-            : form.regionPreference,
+        regionPreference: form.regionPreference.includes("Other")
+          ? [
+              ...form.regionPreference.filter((r) => r !== "Other"),
+              ...(otherText.regionPreference?.trim()
+                ? [otherText.regionPreference.trim()]
+                : []),
+            ]
+          : form.regionPreference,
       };
 
       const res = await fetch(`${API_URL}/userinfo`, {
@@ -146,13 +178,23 @@ export default function FormClient() {
       });
 
       if (!res.ok) throw new Error("Failed to submit form");
-      setOk(true);
-      router.push(`/user?email=${encodeURIComponent(email)}#missions`);
+
+      clearInterval(progressInterval);
+      setProgress(100);
+
+      setTimeout(() => {
+        setOk(true);
+        router.push(`/user?email=${encodeURIComponent(email)}#missions`);
+      }, 300);
     } catch (err: any) {
-      setOk(false);
+      clearInterval(progressInterval);
+      setProgress(100);
       setError(err?.message || "Something went wrong");
+
+      // reset bar after error
+      setTimeout(() => setProgress(0), 800);
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 300);
     }
   };
 
@@ -376,25 +418,33 @@ export default function FormClient() {
           </div>
 
           {/* Region Preference */}
+          {/* Region Preference */}
           <div className="form-field">
-            <label>Region Preference</label>
-            <select
-              value={form.regionPreference}
-              onChange={(e) =>
-                setForm({ ...form, regionPreference: e.target.value })
-              }
-            >
-              <option value="">Select one or more regions</option>
+            <label>
+              Region Preference{" "}
+              <span className="label-note">(select one or more)</span>
+            </label>
+
+            <div className="pill-row">
               {regions.map((r) => (
-                <option key={r} value={r}>
+                <button
+                  key={r}
+                  type="button"
+                  className={`pill ${
+                    form.regionPreference.includes(r) ? "active" : ""
+                  }`}
+                  onClick={() => toggleRegion(r)}
+                >
                   {r}
-                </option>
+                </button>
               ))}
-            </select>
-            {form.regionPreference === "Other" && (
+            </div>
+
+            {/* Custom input when Other is selected */}
+            {form.regionPreference.includes("Other") && (
               <input
                 type="text"
-                placeholder="Please specify"
+                placeholder="Please specify your preferred regions"
                 value={otherText.regionPreference || ""}
                 onChange={(e) =>
                   setOtherText((prev) => ({
@@ -424,6 +474,11 @@ export default function FormClient() {
               {loading ? "Saving..." : "Save & Continue"}
             </button>
           </div>
+          {loading && (
+            <div className="progress-wrapper">
+              <div className="progress-bar" style={{ width: `${progress}%` }} />
+            </div>
+          )}
         </form>
       </div>
     </main>

@@ -959,4 +959,18 @@
   .journey-complete-text {
     font-size: 0.95rem;
   }
+  /* === Mobile drag ghost === */
+  .drag-ghost {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.9;
+  }
+
+  .drag-ghost img {
+    width: 120px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  }
 }

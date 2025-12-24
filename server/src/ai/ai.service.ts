@@ -28,11 +28,25 @@ export class AiService {
       apiKey: process.env.GEMINI_API_KEY,
     });
   }
+  private formatRegion(regionPreference?: string[] | string): string {
+    if (!regionPreference) return 'Germany';
+
+    if (Array.isArray(regionPreference)) {
+      if (regionPreference.length === 0) return 'Germany';
+      if (regionPreference.length === 1) return regionPreference[0];
+
+      // Multiple regions → readable for AI
+      return regionPreference.slice(0, 2).join(' & ');
+    }
+
+    return regionPreference;
+  }
 
   async createLevel1(email: string) {
     const user = await this.userService.findByEmail(email);
     const userInfo = await this.userInfoService.getUserInfoByEmail(email);
     const userGame = await this.userGameService.getUserGameByEmail(email);
+    const regionText = this.formatRegion(userInfo.regionPreference);
 
     if (!user || !userInfo || !userGame)
       throw new Error('Missing user data for Level 1 creation');
@@ -339,9 +353,7 @@ Your goal now is to generate **6 new multiple-choice questions** that:
 
 - Learning Goal: ${userInfo.goal ?? 'not specified'}
 - Favorite Cuisine: ${userInfo.favoriteCuisine ?? 'not specified'}
-- Region Preference inside Germany: ${
-      userInfo.regionPreference ?? 'not specified'
-    }
+- Region Preference inside Germany: ${regionText}
 
 🎮 **User Game Info**
 - Pre-test score: ${userGame.pretestScore}/10
@@ -510,7 +522,223 @@ Return **only** the JSON array.
 
     // ✅ SAME pretest bank as Level 1 (reuse / copy or import)
     const questions = [
-      /* ... your exact pretest bank ... */
+      {
+        id: 1,
+        type: 'image',
+        question: 'What is this dish typically served with?',
+        image: '/assets/img/Pre-test/bratwurst.jpg',
+        options: [
+          'Bread roll & mustard',
+          'Potato salad',
+          'Sauerkraut & potatoes',
+          'Bread with ketchup',
+        ],
+        answer: 'Bread roll & mustard',
+        difficulty: 'easy' as Difficulty,
+        domain: 'iconic_dishes' as QuestionDomain,
+        explanation:
+          'Tests whether the learner knows the typical serving style of German bratwurst as a street snack (Brötchen + mustard).',
+        sources: [
+          'https://en.wikipedia.org/wiki/Bratwurst',
+          'https://festwirt.de/en/bratwursts-and-its-different-varieties/',
+        ],
+      },
+
+      {
+        id: 2,
+        type: 'text',
+        question: 'What is the main ingredient in Sauerkraut?',
+        options: ['White cabbage', 'Red cabbage', 'Cucumber', 'Turnip'],
+        answer: 'White cabbage',
+        difficulty: 'medium' as Difficulty,
+        domain: 'ingredients' as QuestionDomain,
+        explanation:
+          'Checks basic knowledge that Sauerkraut is fermented cabbage, a core stereotype of German cuisine.',
+        sources: [
+          'https://en.wikipedia.org/wiki/Sauerkraut',
+          'https://elavegan.com/how-to-make-sauerkraut/',
+        ],
+      },
+
+      {
+        id: 3,
+        type: 'image',
+        question: 'What is the name of this baked item?',
+        image: '/assets/img/Pre-test/pretzel.jpg',
+        options: ['Brezel', 'Laugenstange', 'Kaisersemmel', 'Schrippe'],
+        answer: 'Brezel',
+
+        difficulty: 'easy' as Difficulty,
+        domain: 'iconic_dishes' as QuestionDomain,
+        explanation:
+          'Measures recognition of the Brezel/pretzel as an iconic German baked good, especially in Bavaria and at Oktoberfest.',
+        sources: [
+          'https://en.wikipedia.org/wiki/Pretzel',
+          'https://germanfoods.org/german-food-facts/all-hail-the-humble-pretzel-an-oktoberfest-classic/',
+        ],
+      },
+
+      {
+        id: 4,
+        type: 'imageGrid',
+        question: 'Which is Germany’s most popular street food today?',
+        imageOptions: [
+          { src: '/assets/img/Pre-test/doner.jpg', label: 'Döner Kebab' },
+          { src: '/assets/img/Pre-test/Currywurst.jpg', label: 'Currywurst' },
+          {
+            src: '/assets/img/Pre-test/bratwurst.jpg',
+            label: 'Bratwurst with roll',
+          },
+          {
+            src: '/assets/img/Pre-test/Leberkäse sandwich.jpg',
+            label: 'Leberkäse sandwich',
+          },
+        ],
+        answer: 'Döner Kebab',
+
+        difficulty: 'medium' as Difficulty,
+        domain: 'street_food' as QuestionDomain,
+        explanation:
+          'Assesses awareness of modern German street food culture and migration influence, where Döner has overtaken Currywurst in popularity.',
+        sources: [
+          'https://adventure.com/gemany-fast-food-turkish-doner-kebab/',
+          'https://www.aa.com.tr/en/culture/doner-kebab-is-more-popular-than-currywurst-in-germany-survey-finds/2774790',
+        ],
+      },
+
+      {
+        id: 5,
+        type: 'text',
+        question: 'How is Sauerbraten traditionally prepared?',
+        options: [
+          'Marinated & roasted',
+          'Smoked & grilled',
+          'Pan-fried',
+          'Steamed',
+        ],
+        answer: 'Marinated & roasted',
+        difficulty: 'medium' as Difficulty,
+        domain: 'iconic_dishes' as QuestionDomain,
+        explanation:
+          'Tests deeper knowledge that Sauerbraten is a marinated pot roast, usually beef, slowly roasted after several days in a vinegar/wine marinade.',
+        sources: [
+          'https://en.wikipedia.org/wiki/Sauerbraten',
+          'https://daysofjay.com/2022/11/18/real-german-sauerbraten/',
+        ],
+      },
+
+      {
+        id: 6,
+        type: 'matching',
+        question:
+          'Match the correct potato salad style to its region (South vs North).',
+        pairs: [
+          {
+            id: 'south',
+            label: 'Southern Germany',
+            image: '/assets/img/Pre-test/kartoffelsalat_south.png',
+          },
+          {
+            id: 'north',
+            label: 'Northern Germany',
+            image: '/assets/img/Pre-test/kartoffelsalat_north.png',
+          },
+        ],
+        difficulty: 'hard' as Difficulty,
+        domain: 'regional_diversity' as QuestionDomain,
+        explanation:
+          'Captures knowledge of regional differences in everyday foods: northern Kartoffelsalat is mayo-based, southern versions use broth or vinegar-oil.',
+        sources: [
+          'https://www.tastingtable.com/926829/what-makes-german-potato-salad-different-from-american/',
+          'https://www.reddit.com/r/germany/comments/7v1chy/is_german_potato_salad_a_traditional_dish/',
+        ],
+      },
+
+      {
+        id: 7,
+        type: 'text',
+        question: 'Traditionally, when do Germans eat their main warm meal?',
+        options: ['Early morning', 'Midday', 'Late evening', 'After midnight'],
+        answer: 'Midday',
+        difficulty: 'medium' as Difficulty,
+        domain: 'eating_habits' as QuestionDomain,
+        explanation:
+          'Measures understanding of traditional eating habits where the main hot meal (Mittagessen) is eaten around noon.',
+        sources: [
+          'https://en.wikipedia.org/wiki/German_cuisine',
+          'https://germanfoods.org/german-food-facts/breakfast-lunch-dinner-snacks/',
+        ],
+      },
+
+      {
+        id: 8,
+        type: 'matching',
+        question: 'Match each dish to its region in Germany.',
+        pairs: [
+          {
+            id: 'bavaria',
+            label: 'Weißwurst (Bavaria)',
+            image: '/assets/img/Pre-test/Weisswurst.png',
+          },
+          {
+            id: 'north',
+            label: 'Labskaus (Northern Germany)',
+            image: '/assets/img/Pre-test/LabsKaus.png',
+          },
+          {
+            id: 'swabia',
+            label: 'Spätzle (Swabia)',
+            image: '/assets/img/Pre-test/Spätzle.png',
+          },
+        ],
+
+        difficulty: 'hard' as Difficulty,
+        domain: 'regional_diversity' as QuestionDomain,
+        explanation:
+          'Assesses regional food culture knowledge by linking Weißwurst to Bavaria, Labskaus to Northern Germany, and Spätzle to Swabia.',
+        sources: [
+          'https://www.discover-bavaria.com/Inspiration/bavarian-specialities',
+          'https://en.wikipedia.org/wiki/Labskaus',
+          'https://en.wikipedia.org/wiki/Sp%C3%A4tzle',
+        ],
+      },
+      {
+        id: 9,
+        type: 'imageGrid',
+        question: 'Which of the following cheeses is Milbenkäse?',
+        imageOptions: [
+          { src: '/assets/img/Pre-test/Milbenkäse.jpg', label: 'Milbenkäse' },
+          { src: '/assets/img/Pre-test/brie.jpg', label: 'Brie' },
+          { src: '/assets/img/Pre-test/emmental.jpg', label: 'Emmental' },
+          { src: '/assets/img/Pre-test/Gouda.jpg', label: 'Gouda' },
+        ],
+        answer: 'Milbenkäse',
+        difficulty: 'hard' as Difficulty,
+        domain: 'specialty_product' as QuestionDomain,
+        explanation:
+          'Tests advanced knowledge of a rare German specialty cheese from Würchwitz that is ripened with cheese mites.',
+        sources: [
+          'https://en.wikipedia.org/wiki/Milbenk%C3%A4se',
+          'https://www.atlasobscura.com/places/cheese-mite-memorial',
+        ],
+      },
+      {
+        id: 10,
+        type: 'image',
+        question: 'What is the volume of a beer Maß at Oktoberfest?',
+        image: '/assets/img/Pre-test/beer.jpg',
+        options: ['0.5 L', '1 L', '1.5 L', '2 L'],
+        answer: '1 L',
+
+        difficulty: 'medium' as Difficulty,
+        domain: 'festival_culture' as QuestionDomain,
+        explanation:
+          'Checks knowledge of Oktoberfest beer culture, where the standard Maßkrug holds one liter of beer.',
+        sources: [
+          'https://www.paulaner-shop.de/en/1.0-l-glass-mug/PB05000',
+          'https://www.germansteins.com/frankfurt-dimpled-oktoberfest-glass-beer-mug-1-liter/',
+        ],
+      },
     ];
 
     // ✅ Extract wrong questions exactly like Level 1
@@ -533,7 +761,7 @@ Return **only** the JSON array.
     const pretestBankJson = JSON.stringify(questions, null, 2);
 
     // 🎯 Region
-    const region = userInfo.regionPreference || 'Germany';
+    const region = this.formatRegion(userInfo.regionPreference);
 
     // ✅ NEW Level 2 prompt (Level1 style)
     const prompt = `
@@ -562,7 +790,8 @@ ${wrongQuestionsJson}
 
 ========================
 📍 USER REGION
-Selected region: **${region}**
+Selected region(s): **${region}**
+If multiple regions are listed, blend their food cultures naturally.
 If unclear, choose the nearest culturally meaningful German region.
 
 ========================
@@ -676,7 +905,7 @@ No extra text. No markdown. No comments. JSON must parse.
       const newLevel = new this.level2Model({
         email,
         region,
-        theme: `${region} Regional Food Sorting`,
+        theme: `Regional Food Sorting (${region})`,
         difficulty: 'medium',
         cards,
         modelUsed: 'gemini-2.5-flash',
@@ -743,7 +972,7 @@ No extra text. No markdown. No comments. JSON must parse.
     const pretestBankJson = JSON.stringify(questions, null, 2);
 
     // 🎯 Region (used for dish flavoring)
-    const region = userInfo.regionPreference || 'Germany';
+    const region = this.formatRegion(userInfo.regionPreference);
 
     // ✅ LEVEL 3 PROMPT (SAME STRUCTURE AS LEVEL 2)
     const prompt = `
@@ -785,7 +1014,8 @@ Level 3 goes deeper:
 
 ========================
 📍 USER REGION
-Selected region: **${region}**
+Selected region(s): **${region}**
+If multiple regions are listed, blend their food cultures naturally.
 Use this to slightly influence dish style when possible.
 
 ========================
