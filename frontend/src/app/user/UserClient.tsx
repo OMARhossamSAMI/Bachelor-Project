@@ -1300,55 +1300,48 @@ export default function UserClient() {
 
                           {/* Show Finished badge */}
                           {/* Completed Action Bar */}
-                          {userGame && (userGame as any)[mission.key] > 0 && (
-                            <div className="mission-complete-bar">
-                              <div className="mission-complete-badge">
-                                <span className="dot" />
-                                Completed
+                          {userGame &&
+                            (userGame as any)[mission.key] > 0 &&
+                            !["Pre-Test", "Post-Test"].includes(
+                              mission.title
+                            ) && (
+                              <div className="mission-complete-bar">
+                                <div className="mission-complete-badge">
+                                  <span className="dot" />
+                                  Completed
+                                </div>
+
+                                <button
+                                  className="mission-replay-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    playMissionStartSound();
+
+                                    setTimeout(() => {
+                                      if (mission.title === "Warm-Up Level") {
+                                        window.location.href = `/level1?email=${encodeURIComponent(
+                                          email || ""
+                                        )}`;
+                                      } else if (
+                                        mission.title === "Regional Quest"
+                                      ) {
+                                        window.location.href = `/level2?email=${encodeURIComponent(
+                                          email || ""
+                                        )}`;
+                                      } else if (
+                                        mission.title === "Build Your Dish"
+                                      ) {
+                                        window.location.href = `/level3?email=${encodeURIComponent(
+                                          email || ""
+                                        )}`;
+                                      }
+                                    }, 500);
+                                  }}
+                                >
+                                  🔁 Replay
+                                </button>
                               </div>
-
-                              <button
-                                className="mission-replay-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  playMissionStartSound();
-
-                                  setTimeout(() => {
-                                    if (mission.title === "Warm-Up Level") {
-                                      window.location.href = `/level1?email=${encodeURIComponent(
-                                        email || ""
-                                      )}`;
-                                    } else if (
-                                      mission.title === "Regional Quest"
-                                    ) {
-                                      window.location.href = `/level2?email=${encodeURIComponent(
-                                        email || ""
-                                      )}`;
-                                    } else if (
-                                      mission.title === "Build Your Dish"
-                                    ) {
-                                      window.location.href = `/level3?email=${encodeURIComponent(
-                                        email || ""
-                                      )}`;
-                                    } else if (mission.title === "Post-Test") {
-                                      window.location.href = `/post-test?email=${encodeURIComponent(
-                                        email || ""
-                                      )}`;
-                                    } else {
-                                      const formattedTitle = mission.title
-                                        .replace(/\s+/g, "-")
-                                        .replace(/[^a-zA-Z0-9-]/g, "");
-                                      window.location.href = `/${formattedTitle}?email=${encodeURIComponent(
-                                        email || ""
-                                      )}`;
-                                    }
-                                  }, 500);
-                                }}
-                              >
-                                🔁 Replay
-                              </button>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </div>
                     </div>
