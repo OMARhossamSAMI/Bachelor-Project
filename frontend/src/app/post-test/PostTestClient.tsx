@@ -134,18 +134,17 @@ export default function PostTestClient() {
       image: "/assets/img/Post-test/schwarzwalder_kirschtorte.jpg",
       options: [
         "Schwarzwälder Kirschtorte",
-        "Chocolate brownie",
-        "Cheesecake",
-        "Tiramisu",
+        "Donauwelle",
+        "Sachertorte",
+        "Bienenstich",
       ],
       answer: "Schwarzwälder Kirschtorte",
       difficulty: "easy" as Difficulty,
       domain: "iconic_dishes" as QuestionDomain,
       explanation:
-        "Easy visual recognition of a famous German cake. Distractors are common international desserts that look different.",
+        "Easy visual recognition of a famous German cake. Distractors are also well-known Central European cakes, making the options more tempting.",
       sources: ["https://en.wikipedia.org/wiki/Black_Forest_gateau"],
     },
-
     {
       id: 4,
       type: "imageGrid",
@@ -154,23 +153,31 @@ export default function PostTestClient() {
       imageOptions: [
         {
           src: "/assets/img/Post-test/hot_chocolate.jpg",
-          label: "Hot chocolate",
+          label: "Heiße Schokolade (Hot chocolate)",
         },
-        { src: "/assets/img/Post-test/gluhwein.jpg", label: "Glühwein" },
-        { src: "/assets/img/Post-test/coffee.jpg", label: "Coffee" },
-        { src: "/assets/img/Post-test/tea.jpg", label: "Tea" },
+        {
+          src: "/assets/img/Post-test/gluhwein.jpg",
+          label: "Glühwein (Mulled wine)",
+        },
+        {
+          src: "/assets/img/Post-test/coffee.jpg",
+          label: "Kinderpunsch (non-alcoholic punch)",
+        },
+        {
+          src: "/assets/img/Post-test/tea.jpg",
+          label: "Feuerzangenbowle (spiced rum punch)",
+        },
       ],
-      answer: "Glühwein",
+      answer: "Glühwein (Mulled wine)",
       difficulty: "medium" as Difficulty,
       domain: "festival_culture" as QuestionDomain,
       explanation:
-        "Medium: all are realistic warm drinks, but Glühwein is the iconic Christmas-market one in Germany.",
+        "Medium: all options are realistic Christmas-market drinks in Germany, but Glühwein is the most iconic and widely associated one.",
       sources: [
         "https://en.wikipedia.org/wiki/Mulled_wine",
         "https://www.dw.com/en/german-christmas-markets-gl%C3%BChwein-and-more/a-36601767",
       ],
     },
-
     {
       id: 5,
       type: "text",

@@ -1033,15 +1033,21 @@ export default function UserClient() {
                           "level3Score",
                         ][i - 1];
 
+                  const completed =
+                    !!userGame && (userGame as any)?.[mission.key] > 0;
+
                   const unlocked =
                     i === 0
                       ? !userGame || userGame.pretestScore === 0
-                      : userGame && previousKey
+                      : !!userGame && !!previousKey
                       ? (userGame as any)[previousKey] > 0
                       : false;
 
-                  const completed =
-                    userGame && (userGame as any)?.[mission.key] > 0;
+                  // ✅ Block access if Pre-Test / Post-Test already completed
+                  const isPreOrPost =
+                    mission.title === "Pre-Test" ||
+                    mission.title === "Post-Test";
+                  const canEnter = unlocked && !(isPreOrPost && completed);
 
                   return (
                     <div
@@ -1053,8 +1059,8 @@ export default function UserClient() {
                       <div
                         className="service-item position-relative"
                         style={{
-                          opacity: unlocked || completed ? 1 : 0.5,
-                          cursor: unlocked ? "pointer" : "not-allowed",
+                          opacity: canEnter || completed ? 1 : 0.5,
+                          cursor: canEnter ? "pointer" : "not-allowed",
                           transition: "0.3s",
                           border:
                             completed && (userGame as any)[mission.key] > 0
@@ -1066,17 +1072,19 @@ export default function UserClient() {
                               : "0 4px 20px rgba(0,0,0,0.2)",
                         }}
                         onClick={() => {
-                          if (!unlocked) return;
+                          if (!canEnter) return;
 
-                          if (mission.title === "Warm-Up Level") {
+                          if (mission.title === "Warm-Up Level")
                             goTo("/level1");
-                          } else if (mission.title === "Regional Quest") {
+                          else if (mission.title === "Regional Quest")
                             goTo("/level2");
-                          } else if (mission.title === "Build Your Dish") {
+                          else if (mission.title === "Build Your Dish")
                             goTo("/level3");
-                          } else if (mission.title === "Post-Test") {
+                          else if (mission.title === "Post-Test")
                             goTo("/post-test");
-                          } else {
+                          else if (mission.title === "Pre-Test")
+                            goTo("/pre-test"); // ✅ add this explicitly
+                          else {
                             const formattedTitle = mission.title
                               .replace(/\s+/g, "-")
                               .replace(/[^a-zA-Z0-9-]/g, "");
@@ -1164,6 +1172,17 @@ export default function UserClient() {
                                 )}
                               </div>
                             )}
+                          {isPreOrPost && completed && (
+                            <div
+                              style={{
+                                marginTop: 8,
+                                color: "#28a745",
+                                fontWeight: 700,
+                              }}
+                            >
+                              ✅ Completed (locked)
+                            </div>
+                          )}
 
                           {/* Regional Quest generator */}
                           {mission.title === "Regional Quest" &&
